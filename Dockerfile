@@ -20,10 +20,13 @@
 # - https://registry.hub.docker.com/u/nishigori/rpmbuild
 # - https://registry.hub.docker.com/u/sydneyuni/rpm-build-env/
 
-FROM centos:7
-MAINTAINER jitakirin <jitakirin@gmail.com>
+FROM library/centos:7.2.1511
+MAINTAINER  azouz34200 <mickael.azema@gmail.com>
 
-RUN yum install -y rpmdevtools yum-utils && \
+RUN yum install -y rpmdevtools yum-utils \
+    gcc gcc-c++ \
+    automake autoconf \
+    git && \
     yum clean all && \
     rm -r -f /var/cache/*
 ADD docker-init.sh docker-rpm-build.sh /usr/local/bin/

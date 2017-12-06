@@ -18,6 +18,12 @@
 
 set -e "${VERBOSE:+-x}"
 
+help(){
+  echo "Usage: docker run [--rm]" \
+    "--volume=/path/to/source:/src --workdir=/src" \
+    "rpmbuild [--sh] SPECFILE [OUTDIR=.]" >&2
+  exit 2
+}
 BUILD=true
 if [[ $1 == --sh ]]; then
   BUILD=false
@@ -25,14 +31,11 @@ if [[ $1 == --sh ]]; then
 fi
 
 SPEC="$1"
-OUTDIR="${2:-$PWD}"
 if [[ -z ${SPEC} || ! -e ${SPEC} ]]; then
-  echo "Usage: docker run [--rm]" \
-    "--volume=/path/to/source:/src --workdir=/src" \
-    "rpmbuild [--sh] SPECFILE [OUTDIR=.]" >&2
-  exit 2
+ echo "SPEC $1 $2"
+  help
 fi
-
+OUTDIR="${2:-$PWD}"
 # pre-builddep hook for adding extra repos
 if [[ -n ${PRE_BUILDDEP} ]]; then
   bash "${VERBOSE:+-x}" -c "${PRE_BUILDDEP}"
